@@ -29,8 +29,8 @@ function App() {
         <Route exact path='/'>
           <Home />
         </Route>
-        <Route>
-          <ParentForm path='sign-up-log-in'/>
+        <Route path='/sign-up-log-in'>
+            <ParentForm />
         </Route>
       </Switch>
     </Router>

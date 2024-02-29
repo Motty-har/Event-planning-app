@@ -6,7 +6,21 @@ function Navbar() {
   const { user, setUser } = useGlobalState();
 
   const handleLogout = () => {
-    setUser(false);
+    fetch('/logout', {
+      method: 'DELETE',
+    })
+      .then(response => {
+        if (response.ok) {
+          console.log('Logout successful');
+          setUser(false);
+        } else {
+          console.error('Logout failed');
+        }
+      })
+      .catch(error => {
+        console.error('Error occurred during logout:', error);
+      });
+    
   };
 
   return (

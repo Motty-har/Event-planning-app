@@ -34,7 +34,6 @@ function LogIn() {
         })
         .then((user) => {
           setUser(user);
-          setEvents(user.invitations);
           history.push('/');
         })
         .catch((error) => {
