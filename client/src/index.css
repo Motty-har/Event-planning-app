@@ -279,3 +279,79 @@ input {
 .signup-btn:hover {
   text-decoration: underline;
 }
+
+/*Display Events*/
+.no-events-container {
+  display: flex;
+  flex-direction: column; /* Display children in a column layout */
+  justify-content: center;
+  align-items: center;
+  height: 50vh; 
+}
+
+.no-events-message {
+  font-size: 2em;
+  color: whitesmoke; /* Text color */
+  text-align: center;
+  padding: 20px;
+  border: 1px solid #ccc; /* Border */
+  border-radius: 10px; /* Border radius */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Box shadow */
+}
+
+.event-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  padding: 20px;
+}
+
+.event-card {
+  flex: 1;
+  flex-basis: calc(20% - 32px);
+  min-width: 300px;
+  max-width: 400px;
+  margin: 16px;
+  box-sizing: border-box;
+  border: 1px solid #483C32;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: transparent; 
+}
+
+.event-card:hover {
+  transform: scale(1.05);
+}
+
+.event-card-title {
+  font-size: 1.5em;
+  margin-bottom: 8px;
+  text-align: center;
+  -webkit-text-fill-color:  #483C32;
+}
+
+.event-card-details {
+  display: flex;
+  flex-direction: column;
+  color:  #483C32;
+}
+
+.event-card-details p {
+  margin: 8px 0;
+}
+
+.event-card-description {
+  color: #483C32; 
+  font-size: 1.2em;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.event-card-status {
+  margin-top: 12px;
+  font-weight: bold;
+  text-transform: capitalize;
+  color: #483C32;
+  text-align: center;
+}

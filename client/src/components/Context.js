@@ -5,11 +5,16 @@ const GlobalStateContext = createContext();
 export const GlobalStateProvider = ({ children }) => {
     const [user, setUser] = useState(false)
     const [logIn, setLogIn] = useState(false)
+    const [events, setEvents] = useState([])
+    const [hostedEvents, setHostedEvents] = useState([])
+
   
   
     const globalState = {
       user, setUser,
-      logIn, setLogIn,  
+      logIn, setLogIn, 
+      events, setEvents,
+      hostedEvents, setHostedEvents,
     };
 
   return (
