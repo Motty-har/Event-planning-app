@@ -3,9 +3,9 @@ from datetime import datetime, timedelta
 
 from faker import Faker
 
-from app import app
+from app import app, db  # Assuming 'db' is your SQLAlchemy instance
 from models import *
-from events import events 
+from events import events
 
 if __name__ == '__main__':
     fake = Faker()
@@ -43,8 +43,8 @@ if __name__ == '__main__':
 
             user = User(
                 username=username,
-                first_name = first_name,
-                last_name = last_name,
+                first_name=first_name,
+                last_name=last_name,
                 email=email,
             )
             user.password_hash = user.username + 'password'
@@ -60,6 +60,10 @@ if __name__ == '__main__':
 
         for event in Event.query.all():
             for user in User.query.all():
+                # Skip creating invitation if user is the host
+                if user.id == event.host_id:
+                    continue
+
                 status = choice(['accepted', 'declined', 'pending'])
                 invitation = Invitation(
                     event_id=event.id,

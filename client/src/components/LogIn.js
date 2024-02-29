@@ -46,6 +46,17 @@ function LogIn() {
     <div className="parent-container">
       <div className="form-card">
         <h1 className="form-name">Log In</h1>
+        <div className="btn-wrapper" style={{ textAlign: 'center' }}>
+              <p className="message">Don't have an account yet? {
+                <button
+                className="signup-btn"
+                type="click"
+                onClick={() => setLogIn(!logIn)}
+                style={{ color: '#483C32' }}
+              >
+                Sign Up
+              </button>}</p>
+            </div><br></br>
         <div className="card-body">
           <form onSubmit={formik.handleSubmit}>
             <div className="input-wrapper">
@@ -70,22 +81,13 @@ function LogIn() {
                   value={formik.values.password}
                 />
                 
-              </div><br></br>
+              </div>
             </div>
-            {error ? <p className="error-message">Username or Password is incorrect</p> : null}
+            <div className="error-message" style={{ textAlign: 'center', width: '100%', margin: '0 auto' }}>
+                {error ? <p>Username or Password is incorrect</p> : null}
+            </div><br></br>
             <div className="submit-button-wrapper">
               <button className="submit-button" type="submit">Submit</button>
-            </div><br />
-            <div className="btn-wrapper" style={{ textAlign: 'center' }}>
-              <p className="message">Don't have an account yet?</p>
-              <button
-                className="signup-btn"
-                type="click"
-                onClick={() => setLogIn(!logIn)}
-                style={{ color: '#483C32' }}
-              >
-                Sign Up
-              </button>
             </div>
           </form>
         </div>

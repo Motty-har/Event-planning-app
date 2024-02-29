@@ -62,7 +62,17 @@ function SignUp() {
   return (
     <div className="parent-container">
       <div className="form-card">
-        <h1 className="form-name">Sign Up</h1>
+      <h1 className="form-name">Sign Up</h1>
+      <div className="btn-wrapper" style={{ textAlign: 'center' }}>
+              <p className="message">Have an account already?{      <button
+                className="signup-btn"
+                type="click"
+                onClick={() => setLogIn(!logIn)}
+                style={{ color: '#483C32' }}
+              >
+                Log In
+              </button>}</p>
+            </div><br></br>
         <div className="card-body">
           <form onSubmit={formik.handleSubmit}>
             <label htmlFor="firstName">First Name</label>
@@ -151,18 +161,6 @@ function SignUp() {
             ) : null}
             <div className="submit-button-wrapper">
               <button className="submit-button">Submit</button>
-            </div>
-            <br></br>
-            <div className="btn-wrapper" style={{ textAlign: 'center' }}>
-              <p className="message">Have an account already?</p>
-              <button
-                className="signup-btn"
-                type="click"
-                onClick={() => setLogIn(!logIn)}
-                style={{ color: '#483C32' }}
-              >
-                Log In
-              </button>
             </div>
           </form>
         </div>

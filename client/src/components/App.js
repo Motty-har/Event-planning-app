@@ -5,6 +5,8 @@ import Home from "./Home";
 import Navbar from "./NavBar";
 import ParentForm from "./ParentForm";
 import DisplayEvents from "./DisplayEvents";
+import DisplayMyEvents from "./DisplayMyEvents";
+import CreateEvent from "./CreateEvent";
 
 function App() {
   const [loading, setLoading] = useState(true)
@@ -14,9 +16,10 @@ function App() {
     fetch('/check_session')
     .then(r => r.json())
     .then(user => {
+      console.log(user)
       setUser(user)
-      setEvents([])
-      setHostedEvents(user.hoasted_events)
+      setEvents(user.invitations)
+      setHostedEvents(user.hosted_events)
       setLoading(false)
     })
     .catch((error) => {
@@ -37,6 +40,12 @@ function App() {
         </Route>
         <Route path='/upcoming-events'>
             <DisplayEvents />
+        </Route>
+        <Route path='/my-events'>
+          <DisplayMyEvents />
+        </Route>
+        <Route path='/create-event'>
+            <CreateEvent />
         </Route>
       </Switch>
     </Router>
