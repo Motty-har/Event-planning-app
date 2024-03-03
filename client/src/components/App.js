@@ -6,7 +6,7 @@ import Navbar from "./NavBar";
 import ParentForm from "./ParentForm";
 import DisplayEvents from "./DisplayEvents";
 import DisplayMyEvents from "./DisplayMyEvents";
-import CreateEvent from "./CreateEvent";
+import CreateEventForm from "./CreateEventForm";
 
 function App() {
   const [loading, setLoading] = useState(true)
@@ -45,7 +45,7 @@ function App() {
           <DisplayMyEvents />
         </Route>
         <Route path='/create-event'>
-            <CreateEvent />
+            <CreateEventForm />
         </Route>
       </Switch>
     </Router>

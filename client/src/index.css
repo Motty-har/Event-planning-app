@@ -355,3 +355,80 @@ input {
   color: #483C32;
   text-align: center;
 }
+/*Create event card*/
+.create-event-header{
+  color: #483C32;
+  text-align: center;
+}
+
+.event-form-card {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #AEC6CF;
+  border: 3px solid #483C32;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px #483C32;
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+}
+
+.create-event-form {
+  width: 100%; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form-group {
+  width: 100%; 
+  margin-bottom: 20px;
+}
+
+label {
+  font-size: 1.2em;
+  margin-bottom: 8px;
+  color: #483C32;
+  align-self: flex-start;
+}
+
+textarea {
+  width: calc(100% - 20px); /* Adjust width with padding */
+  height: 100px;
+  padding: 10px;
+  border: 1px solid #483C32;
+  border-radius: 5px;
+  box-sizing: border-box;
+  resize: none;
+}
+
+.input {
+  width: 100%; /* Set width to 100% for all inputs except textarea */
+  padding: 10px;
+  border: 1px solid #483C32;
+  border-radius: 5px;
+}
+.form-group{
+  max-width: 380px;
+}
+.error {
+  color: red;
+  margin-top: 4px;
+}
+
+.submit-button {
+  background-color: #483C32;
+  color: #FAF0E6;;
+  padding: 12px;
+  font-size: 1.2em;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+  background-color: #FAF0E6;
+  color: #483C32;
+}
