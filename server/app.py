@@ -20,7 +20,7 @@ class CheckSession(Resource):
             user = User.query.get(user_id)
             return user.to_dict(), 200
 
-        return {}, 401
+        return False, 401
 
 class Signup(Resource):
     def post(self):
@@ -91,15 +91,44 @@ class Users(Resource):
         users = User.query.order_by(User.last_name).all()
 
         return [user.to_dict() for user in users], 200
+
+class EventInvitations(Resource):
+    def get(self, event_id):
+
+        invites = Invitation.query.filter_by(event_id = event_id).all()
+        
+        return [invite.user.to_dict() for invite in invites], 200
     
-api.add_resource(CheckSession, '/check_session')
+
+class CreateInvitations(Resource):
+    def post(self):
+        data = request.get_json()
+        invitees = data.get('selected_users')
+        event_id = data.get('event_id')
+
+        Invitation.query.filter_by(event_id = event_id).delete()
+        db.session.commit()
+
+        for user in invitees:
+            invitation = Invitation(
+                event_id=event_id,
+                user_id=user,
+                status='pending'
+            )
+            db.session.add(invitation)
+        
+        db.session.commit()
+
+        return { 'Success': True }, 200
+    
+api.add_resource(CheckSession, '/check_session', endpoint='check_session')
 api.add_resource(Signup, '/signup')
 api.add_resource(Login, '/login')
 api.add_resource(Logout, '/logout')
 api.add_resource(CreateEvent, '/create_event/<int:user_id>')
 api.add_resource(Users, '/users')
-
-
+api.add_resource(EventInvitations, '/event_invitations/<int:event_id>')
+api.add_resource(CreateInvitations, '/create_invitations')
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
 

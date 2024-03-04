@@ -21,13 +21,15 @@ const Invitations = () => {
         console.error('Error fetching users:', error);
         setLoading(false); 
       });
+      fetch(`/event_invitations/${event_id}`)
+      .then(r => r.json())
+      .then(r => setSelectedUsers(r))
   }, []);
-
   if (loading) {
     return <LoadingPage />;
   }
   console.log(selectedUsers)
-  const handleUserToggle = (selectedUser) => {
+  function handleUserToggle(selectedUser){
     setSelectedUsers(prevSelectedUsers => {
       if (prevSelectedUsers.find(user => user.id === selectedUser.id)) {
         return prevSelectedUsers.filter(user => user.id !== selectedUser.id);
@@ -46,7 +48,7 @@ const Invitations = () => {
       event_id: parseInt(event_id, 10)
     };
 
-    fetch('/invitations', {
+    fetch('/create_invitations', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
