@@ -25,7 +25,7 @@ function CreateEventForm() {
   });
 
   const onSubmit = (values) => {
-    fetch(`/create-event/${user.id}`, {
+    fetch(`/create_event/${user.id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -72,7 +72,7 @@ function CreateEventForm() {
               className="form-input"
             />
             <ErrorMessage name="description" component="div" className="error" />
-          </div>
+          </div><br></br>
 
           <div className="form-group">
             <label htmlFor="date">Date</label>

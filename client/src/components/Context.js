@@ -7,14 +7,14 @@ export const GlobalStateProvider = ({ children }) => {
     const [logIn, setLogIn] = useState(false)
     const [events, setEvents] = useState([])
     const [hostedEvents, setHostedEvents] = useState([])
-
-  
+    const [selectedUsers, setSelectedUsers] = useState([]);
   
     const globalState = {
       user, setUser,
       logIn, setLogIn, 
       events, setEvents,
       hostedEvents, setHostedEvents,
+      selectedUsers, setSelectedUsers,
     };
 
   return (

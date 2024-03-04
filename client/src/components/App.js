@@ -7,6 +7,7 @@ import ParentForm from "./ParentForm";
 import DisplayEvents from "./DisplayEvents";
 import DisplayMyEvents from "./DisplayMyEvents";
 import CreateEventForm from "./CreateEventForm";
+import Invitations from "./Invitations";
 
 function App() {
   const [loading, setLoading] = useState(true)
@@ -46,6 +47,9 @@ function App() {
         </Route>
         <Route path='/create-event'>
             <CreateEventForm />
+        </Route>
+        <Route path='/invitations/:event_id'>
+          <Invitations />
         </Route>
       </Switch>
     </Router>

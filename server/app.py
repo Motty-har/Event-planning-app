@@ -60,16 +60,44 @@ class Logout(Resource):
     def delete(self):
         session['user_id'] = None
         return False, 204
+    
+class CreateEvent(Resource):
+    def post(self, user_id):
+        user_id = session.get('user_id')
+        if not user_id:
+            return {'error': '401 Unauthorized'}, 401
 
+        event_data = request.get_json()
+
+        title = event_data.get('title')
+        description = event_data.get('description')
+        date_str = event_data.get('date')
+        time_str = event_data.get('time')
+        location = event_data.get('location')
+        
+
+        date = datetime.strptime(date_str, '%Y-%m-%d').date()
+        time = datetime.strptime(time_str, '%H:%M').time()
+
+        event = Event(title=title, description=description, date=date, time=time, location=location, host_id = user_id)
+        db.session.add(event)
+        db.session.commit()
+
+        return event.to_dict(), 200
+
+class Users(Resource):
+    def get(self):
+
+        users = User.query.order_by(User.last_name).all()
+
+        return [user.to_dict() for user in users], 200
     
 api.add_resource(CheckSession, '/check_session')
 api.add_resource(Signup, '/signup')
 api.add_resource(Login, '/login')
 api.add_resource(Logout, '/logout')
-
-@app.route('/')
-def index():
-    return '<h1>Project Server</h1>'
+api.add_resource(CreateEvent, '/create_event/<int:user_id>')
+api.add_resource(Users, '/users')
 
 
 if __name__ == '__main__':
