@@ -557,3 +557,75 @@ textarea {
   white-space: pre-line;
   font-size: 16px; /* Adjust the font size as needed */
 }
+
+/*Event*/
+.centered-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  padding: 20px;
+}
+.single-event-card {
+  flex: 1;
+  flex-basis: calc(20% - 32px);
+  min-width: 500px;
+  max-width: 400px;
+  margin: 16px;
+  box-sizing: border-box;
+  border: 1px solid #483C32;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 8px #483C32;
+  background-color: transparent;
+}
+.single-event-card-title {
+  font-size: 1.5em;
+  margin-bottom: 8px;
+  text-align: center;
+  -webkit-text-fill-color: #483C32;
+  -webkit-text-stroke: 0.6px black;
+}
+.single-event-card-details {
+  display: flex;
+  flex-direction: column;
+  color: #483C32;
+}
+
+.single-event-card-details p {
+  margin: 8px 0;
+}
+.single-event-card-title{
+  font-size: 40px;
+}
+
+.single-event-card-text{
+  font-size: 20px;
+}
+.single-event-card-description{
+  text-align: center;
+  font-size: 24px;
+}
+
+.single-event-card:hover {
+  transform: scale(1.05);
+}
+.invite-header{
+  text-align: center;
+  font-size: 40px;
+  color: #483C32
+}
+.invite-card{
+  display: inline-block;
+  flex: 1;
+  flex-basis: calc(20% - 32px);
+  min-width: 100px;
+  max-width: 300px;
+  margin: 16px;
+  box-sizing: border-box;
+  border: 1px solid #483C32;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 8px #483C32;
+  background-color: transparent;
+  color: #483C32;
+}

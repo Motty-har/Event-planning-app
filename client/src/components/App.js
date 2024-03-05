@@ -9,6 +9,7 @@ import DisplayMyEvents from "./DisplayMyEvents";
 import CreateEventForm from "./CreateEventForm";
 import Invitations from "./Invitations";
 import CreateTasks from "./CreateTasks";
+import Event from "./Event";
 
 function App() {
   const [loading, setLoading] = useState(true)
@@ -54,6 +55,9 @@ function App() {
         </Route>
         <Route path='/create-tasks/:event_id'>
           <CreateTasks />
+        </Route>
+        <Route path='/upcoming-event/:event_id'>
+          <Event />
         </Route>
       </Switch>
     </Router>
