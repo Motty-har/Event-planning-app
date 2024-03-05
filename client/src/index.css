@@ -502,3 +502,58 @@ textarea {
 .warning-message{
   color: black
 }
+
+/*create tasks*/
+.task-form-container{
+  max-width: 400px;
+  margin: 40px auto; /* Adjust the margin to add space from the top */
+  padding: 20px;
+  background-color: #AEC6CF;
+  border: 1px solid #483C32;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px #483C32;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center horizontally */
+}
+
+.submit-button-container{
+  max-width: 150px; 
+  text-align: center;
+  margin: 0 auto;
+}
+
+.task-header{
+  color: #483C32;
+}
+.due-date-input {
+  width: 200px; /* Set the desired width */
+  margin-left: auto; /* Move it to the right */
+}
+.error-message {
+  color: red;
+  font-size: 14px; 
+  margin-top: 4px; 
+}
+.task-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  text-align: center;
+}
+
+.task-card {
+  flex: 1 0 calc(25% - 16px); /* 3/4 boxes per line (25% width each with 16px gap) */
+  min-width: 20px;
+  max-width: 300px;
+  margin: 16px;
+  box-sizing: border-box;
+  border: 1px solid #483C32;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 8px #483C32;
+  background-color: transparent;
+  word-wrap: break-word;
+  white-space: pre-line;
+  font-size: 16px; /* Adjust the font size as needed */
+}

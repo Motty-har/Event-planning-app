@@ -1,8 +1,10 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+import { useGlobalState } from "./Context";
 
 function EventCard({ event, status }) {
-  const { title, description, date, time, location } = event;
+  const { title, description, date, time, location, host_id } = event;
+  const { user } = useGlobalState()
   const history = useHistory()
   function handleClick(){
     history.push(`/upcoming-event/${event.id}`)
@@ -25,9 +27,10 @@ function EventCard({ event, status }) {
       <hr></hr>
       <p className="event-card-description">{description}</p>
       <hr></hr>
+      {!user.id === host_id ?(
       <p className="event-card-status">
         <strong>Status:</strong> {status}
-      </p>
+      </p>) : null}
     </div>
   );
 }
