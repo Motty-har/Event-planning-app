@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import LoadingPage from "./LoadingPage";
 import { useGlobalState } from "./Context";
 
@@ -10,7 +10,7 @@ function Event() {
   const [invites, setInvites] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [hostId, setHostID] = useState(null);
-  const [isCompleted, setIsCompleted] = useState(false);
+  const history = useHistory()
   const { user } = useGlobalState();
 
   useEffect(() => {
@@ -26,21 +26,21 @@ function Event() {
   }, []);
 
   function toggleIsCompleted(taskId) {
-    setTasks(tasks.map(task => {
-        if(task.id === taskId) {
-            return { ...task, completed: !task.completed };
-        } else {
-            return task;
-        }
-    }));
+    setTasks((tasks) =>
+      tasks.map((task) =>
+        task.id === taskId
+          ? { ...task, completed: !task.completed }
+          : task
+      )
+    );
 
     fetch(`/task_status/${taskId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-}
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
 
   return (
     <div>
@@ -67,11 +67,9 @@ function Event() {
               </p>
               <p className="event-card-status">
                 <strong>Status:</strong>{" "}
-                {event.invitations.map((invite) => {
-                  if (invite.user.id === user.id) {
-                    return invite.status;
-                  }
-                })}
+                {event.invitations.map((invite) =>
+                  invite.user.id === user.id ? invite.status : null
+                )}
               </p>
             </div>
           </div>
@@ -82,58 +80,83 @@ function Event() {
           <div>
             <hr />
             <h1 className="invite-header">Invites</h1>
-            {invites &&
-              invites.map((invite) => {
-                return (
-                  <div key={invite.id} className="invite-card">
-                    <h3>
-                      {invite.user.first_name} {invite.user.last_name}
-                    </h3>
-                    <p>
-                      <strong>Email:</strong> {invite.user.email}
-                    </p>
-                    <p>
-                      <strong>Status:</strong>{" "}
-                      {invite.status.charAt(0).toUpperCase() +
-                        invite.status.slice(1)}
-                    </p>
-                  </div>
-                );
-              })}
+            {invites && invites.length > 0 ? (
+              invites.map((invite) => (
+                <div key={invite.id} className="invite-card">
+                  <h3>
+                    {invite.user.first_name} {invite.user.last_name}
+                  </h3>
+                  <p>
+                    <strong>Email:</strong> {invite.user.email}
+                  </p>
+                  <p>
+                    <strong>Status:</strong>{" "}
+                    {invite.status.charAt(0).toUpperCase() +
+                      invite.status.slice(1)}
+                  </p>
+                </div>
+              ))
+            ) : (
+            <div style={{ textAlign: "center", marginTop: "10px" }} onClick={() => history.push(`/invitations/${event.id}`)}>
+                <h1>No Invites yet</h1>
+                <button style={{ padding: "8px", fontSize: "16px" }}>
+                  Add invitations
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </div><br></br> 
+      <div>
+        {tasks && tasks.length > 0 ? (
+          <div>
+            <hr />
+            <h1 className="invite-header">Tasks</h1>
+            {tasks.map((task) => (
+              <div key={task.id} className="invite-card">
+                <p>
+                  <strong>Description:</strong> {task.description}
+                </p>
+                <hr />
+                <br />
+                <p>
+                  <strong>Due Date:</strong> {task.due_date}
+                </p>
+                <br />
+                {task.user && (
+                  <p>
+                    <strong>Assigned To:</strong>{" "}
+                    {task.user.first_name} {task.user.last_name}
+                  </p>
+                )}
+                <p>
+                  <strong>Completed:</strong> {task.completed ? "✅" : "❌"}
+                  {((user.id === task.assigned_to || user.id === event.host_id) && (
+                    <button
+                      onClick={() => toggleIsCompleted(task.id)}
+                      style={{ padding: "8px", fontSize: "16px" }}
+                    >
+                      {task.completed ? "↩️ Undo" : "✅ Mark as Completed"}
+                    </button>
+                  ))}
+                </p>
+                {user.id === event.host_id ? <button> 🗑️ </button> : null}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div style={{ textAlign: "center", marginTop: "10px" }}>
+            <hr />
+            <h1 className="invite-header">Tasks</h1>
+            <div style={{ textAlign: "center", marginTop: "10px" }}>
+                <h1>No Tasks yet</h1>
+                <button style={{ padding: "8px", fontSize: "16px" }} onClick={() => history.push(`/create-tasks/${event.id}`)}>
+                  Add Tasks
+                </button>
+              </div>
           </div>
         )}
       </div>
-      <hr />
-      <h1 className="invite-header">Tasks</h1>
-      {tasks &&
-  tasks.map((task) => {
-    return (
-      <div key={task.id} className="invite-card">
-        <p>
-          <strong>Description:</strong> {task.description}
-        </p>
-        <hr />
-        <br />
-        <p>
-          <strong>Due Date:</strong> {task.due_date}
-        </p>
-        <br />
-        {task.user && (
-          <p>
-            <strong>Assigned To:</strong> {task.user.first_name} {task.user.last_name}
-          </p>
-        )}
-        <p>
-          <strong>Completed:</strong> {task.completed ? "✅" : "❌"}
-          {user.id === task.assigned_to && (
-            <button onClick={() => toggleIsCompleted(task.id)}>
-              {task.completed ? "↩️ Undo" : "✅ Mark as Completed"}
-            </button>
-          )}
-        </p>
-      </div>
-    );
-  })}
     </div>
   );
 }
