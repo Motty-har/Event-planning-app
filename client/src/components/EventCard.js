@@ -11,7 +11,7 @@ function EventCard({ event, status }) {
   }
   return (
     <div className="event-card" onClick={handleClick}>
-      <h2 className="event-card-title" >{title}</h2>
+      <h1 className="event-card-title" >{title}</h1>
       <hr></hr>
       <div className="event-card-details">
         <p>
@@ -25,12 +25,15 @@ function EventCard({ event, status }) {
         </p>
       </div>
       <hr></hr>
+      <h3 style={{ textAlign: "center" }}>Description</h3>
       <p className="event-card-description">{description}</p>
-      <hr></hr>
-      {!user.id === host_id ?(
+      {user.id != host_id ?(
+        <div>
+          <hr></hr>
       <p className="event-card-status">
         <strong>Status:</strong> {status}
-      </p>) : null}
+      </p>
+      </div>) : null}
     </div>
   );
 }

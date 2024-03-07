@@ -18,7 +18,7 @@ function CreateTasks() {
   },[])
 
   const formSchema = yup.object({
-    description: yup.string().required("Description is required").max(250),
+    description: yup.string().required("Description is required").max(100),
     dueDate: yup.date().required("Due date is required"),
     assignedTo: yup.string(),
   });
@@ -51,7 +51,7 @@ function CreateTasks() {
       .then(data => {
         console.log('Submit Tasks response:', data);
         setTasks([]);
-        history.push('/');
+        history.push('/my-events');
       })
       .catch(error => {
         console.error('Error submitting tasks:', error);

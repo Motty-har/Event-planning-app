@@ -79,7 +79,7 @@ class Task(db.Model, SerializerMixin):
     serialize_rules = ('-event.tasks', 'event.invitations', 'event.host', '-user.hosted_events', '-user.tasks', '-user.invitations',)
 
     id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(255), nullable=False)
+    description = db.Column(db.String(100), nullable=False)
     due_date = db.Column(db.Date, nullable=False)
     completed = db.Column(db.Boolean, default=False)
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'), nullable=False)

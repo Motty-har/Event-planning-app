@@ -48,7 +48,7 @@ function App() {
           <DisplayMyEvents />
         </Route>
         <Route path='/create-event'>
-            <CreateEventForm />
+          <CreateEventForm />
         </Route>
         <Route path='/invitations/:event_id'>
           <Invitations />

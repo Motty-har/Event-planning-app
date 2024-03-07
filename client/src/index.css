@@ -309,7 +309,7 @@ input {
 .event-card {
   flex: 1;
   flex-basis: calc(20% - 32px);
-  min-width: 300px;
+  min-width: 400px;
   max-width: 400px;
   margin: 16px;
   box-sizing: border-box;
@@ -325,7 +325,7 @@ input {
 }
 
 .event-card-title {
-  font-size: 1.5em;
+  font-size: 30px;
   margin-bottom: 8px;
   text-align: center;
   -webkit-text-fill-color:  #483C32;
@@ -628,4 +628,38 @@ textarea {
   box-shadow: 0 4px 8px #483C32;
   background-color: transparent;
   color: #483C32;
+}
+.task-event-card{
+  display: inline-block;
+  flex: 1;
+  flex-basis: calc(20% - 32px);
+  min-width: 350px;
+  max-width: 350px;
+  max-height: 400px;
+  margin: 16px;
+  box-sizing: border-box;
+  border: 1px solid #483C32;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 8px #483C32;
+  background-color: transparent;
+  color: #483C32;
+  word-wrap: break-word; 
+  overflow-wrap: break-word;
+}
+.delete-button {
+  background-color:  #FAF0E6;
+  color: #fff; 
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: large;
+}
+
+.delete-button:hover {
+  background-color: #c63535; 
+}
+.add-button-container{
+  text-align: center;
 }

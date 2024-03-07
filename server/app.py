@@ -160,7 +160,31 @@ class TaskStatus(Resource):
             return task_dict, 200
         else:
             return {"error": "Task not found"}, 404
-           
+        
+class AssignTask(Resource):
+    def patch(self, task_id, user_id):
+        task = Task.query.filter_by(id=task_id).first()
+
+        if task:
+            task.assigned_to = user_id
+            db.session.commit()
+
+            return task.to_dict(), 200
+        else:
+             return {'error': 'Task not found'}, 404
+        
+
+class DeleteTasks(Resource):
+    def delete(self, task_id):
+        task = Task.query.get(task_id)
+
+        if task:
+            db.session.delete(task)
+            db.session.commit()
+            return {'message': 'Task deleted successfully'}, 200
+        else:
+            return {'error': 'Task not found'}, 404
+        
 api.add_resource(CheckSession, '/check_session', endpoint='check_session')
 api.add_resource(Signup, '/signup')
 api.add_resource(Login, '/login')
@@ -172,6 +196,8 @@ api.add_resource(CreateInvitations, '/create_invitations')
 api.add_resource(CreateTasks, '/create_tasks/<int:event_id>')
 api.add_resource(GetEvent, '/get_event/<int:event_id>')
 api.add_resource(TaskStatus, '/task_status/<int:task_id>')
+api.add_resource(DeleteTasks, '/delete_task/<int:task_id>')
+api.add_resource(AssignTask, '/assign_task/<int:task_id>/<int:user_id>')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

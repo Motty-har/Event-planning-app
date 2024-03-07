@@ -10,7 +10,8 @@ function Event() {
   const [invites, setInvites] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [hostId, setHostID] = useState(null);
-  const history = useHistory()
+  const [selectedUserId, setSelectedUserId] = useState('');
+  const history = useHistory();
   const { user } = useGlobalState();
 
   useEffect(() => {
@@ -33,13 +34,44 @@ function Event() {
           : task
       )
     );
-
     fetch(`/task_status/${taskId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
     });
+  }
+
+  function handleDeleteTask(taskId) {
+    fetch(`/delete_task/${taskId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((r) => r.json())
+      .then((r) => {
+        setTasks(tasks.filter((task) => task.id !== taskId));
+      });
+  }
+
+  const handleSelectionChange = (event) => {
+    setSelectedUserId(event.target.value);
+  };
+
+  function handleAssign(taskId) {
+    fetch(`/assign_task/${taskId}/${selectedUserId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((r) => r.json())
+      .then((t) => {
+        setTasks((tasks) =>
+          tasks.map((task) => (task.id === t.id ? t : task))
+        );
+      });
   }
 
   return (
@@ -80,6 +112,15 @@ function Event() {
           <div>
             <hr />
             <h1 className="invite-header">Invites</h1>
+            <div className="add-button-container">
+              <button
+                className="add-button"
+                style={{ padding: "8px", fontSize: "16px" }}
+                onClick={() => history.push(`/invitations/${event_id}`)}
+              >
+                Manage Invitations
+              </button>
+            </div>
             {invites && invites.length > 0 ? (
               invites.map((invite) => (
                 <div key={invite.id} className="invite-card">
@@ -97,23 +138,37 @@ function Event() {
                 </div>
               ))
             ) : (
-            <div style={{ textAlign: "center", marginTop: "10px" }} onClick={() => history.push(`/invitations/${event.id}`)}>
+              <div style={{ textAlign: "center", marginTop: "10px" }}>
                 <h1>No Invites yet</h1>
-                <button style={{ padding: "8px", fontSize: "16px" }}>
-                  Add invitations
+                <button
+                  style={{ padding: "8px", fontSize: "16px" }}
+                  onClick={() => history.push(`/invitations/${event_id}`)}
+                >
+                  Manage Invitations
                 </button>
               </div>
             )}
           </div>
         )}
-      </div><br></br> 
+      </div>
+      <hr />
       <div>
         {tasks && tasks.length > 0 ? (
           <div>
-            <hr />
             <h1 className="invite-header">Tasks</h1>
+            <div className="add-button-container">
+              {user.id === event.host_id ? (
+                <button
+                  className="add-button"
+                  style={{ padding: "8px", fontSize: "16px" }}
+                  onClick={() => history.push(`/create-tasks/${event_id}`)}
+                >
+                  Add Tasks
+                </button>
+              ) : null}
+            </div>
             {tasks.map((task) => (
-              <div key={task.id} className="invite-card">
+              <div key={task.id} className="task-event-card">
                 <p>
                   <strong>Description:</strong> {task.description}
                 </p>
@@ -122,41 +177,72 @@ function Event() {
                 <p>
                   <strong>Due Date:</strong> {task.due_date}
                 </p>
-                <br />
-                {task.user && (
+                {task.user ? (
                   <p>
                     <strong>Assigned To:</strong>{" "}
                     {task.user.first_name} {task.user.last_name}
                   </p>
+                ) : (
+                  <div>
+                    {event.host_id === user.id ? (
+                      <div>
+                        <strong>Unassigned:</strong>
+                        <select
+                          onChange={handleSelectionChange}
+                          value={selectedUserId}
+                        >
+                          <option value="" label="Select an option" />
+                          {invites.map((invite) => (
+                            <option
+                              key={invite.user.id}
+                              value={invite.user.id}
+                              label={`${invite.user.first_name} ${invite.user.last_name}`}
+                            />
+                          ))}
+                        </select>
+                        <button onClick={() => handleAssign(task.id)}>
+                            Assign
+                          </button>
+                      </div>
+                    ) : (
+                      <div>
+                        <strong>Unassigneds: </strong>
+                          No user assigned to task.
+                        </div>
+                    )}
+                  </div>
                 )}
                 <p>
                   <strong>Completed:</strong> {task.completed ? "✅" : "❌"}
-                  {((user.id === task.assigned_to || user.id === event.host_id) && (
-                    <button
-                      onClick={() => toggleIsCompleted(task.id)}
-                      style={{ padding: "8px", fontSize: "16px" }}
-                    >
-                      {task.completed ? "↩️ Undo" : "✅ Mark as Completed"}
-                    </button>
-                  ))}
+                  {(
+                    (user.id === task.assigned_to || user.id === event.host_id) && (
+                      <button onClick={() => toggleIsCompleted(task.id)}>
+                        {task.completed ? "↩ Undo" : "✅ Mark as Completed"}
+                      </button>
+                    )
+                  )}
                 </p>
-                {user.id === event.host_id ? <button> 🗑️ </button> : null}
+                {user.id === event.host_id ? (
+                  <button onClick={() => handleDeleteTask(task.id)}>
+                    Delete Task
+                  </button>
+                ) : null}
               </div>
             ))}
           </div>
         ) : (
           <div style={{ textAlign: "center", marginTop: "10px" }}>
-            <hr />
-            <h1 className="invite-header">Tasks</h1>
-            <div style={{ textAlign: "center", marginTop: "10px" }}>
-                <h1>No Tasks yet</h1>
-                <button style={{ padding: "8px", fontSize: "16px" }} onClick={() => history.push(`/create-tasks/${event.id}`)}>
-                  Add Tasks
-                </button>
-              </div>
+            <h1>No Tasks yet</h1>
+            <button
+              style={{ padding: "8px", fontSize: "16px" }}
+              onClick={() => history.push(`/create-tasks/${event_id}`)}
+            >
+              Add Tasks
+            </button>
           </div>
         )}
       </div>
+      <hr></hr>
     </div>
   );
 }
