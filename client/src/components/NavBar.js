@@ -20,7 +20,6 @@ function Navbar() {
       .catch(error => {
         console.error('Error occurred during logout:', error);
       });
-    
   };
 
   return (

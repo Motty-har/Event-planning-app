@@ -4,15 +4,17 @@ import { useGlobalState } from "./Context";
 
 function EventCard({ event, status }) {
   const { title, description, date, time, location, host_id } = event;
-  const { user } = useGlobalState()
-  const history = useHistory()
-  function handleClick(){
-    history.push(`/upcoming-event/${event.id}`)
+  const { user } = useGlobalState();
+  const history = useHistory();
+
+  function handleClick() {
+    history.push(`/upcoming-event/${event.id}`);
   }
+
   return (
     <div className="event-card" onClick={handleClick}>
-      <h1 className="event-card-title" >{title}</h1>
-      <hr></hr>
+      <h1 className="event-card-title">{title}</h1>
+      <hr />
       <div className="event-card-details">
         <p>
           <strong>Date:</strong> {date}
@@ -24,16 +26,17 @@ function EventCard({ event, status }) {
           <strong>Location:</strong> {location}
         </p>
       </div>
-      <hr></hr>
+      <hr />
       <h3 style={{ textAlign: "center" }}>Description</h3>
       <p className="event-card-description">{description}</p>
-      {user.id != host_id ?(
+      {user.id !== host_id && (
         <div>
-          <hr></hr>
-      <p className="event-card-status">
-        <strong>Status:</strong> {status}
-      </p>
-      </div>) : null}
+          <hr />
+          <p className="event-card-status">
+            <strong>Status:</strong> {status}
+          </p>
+        </div>
+      )}
     </div>
   );
 }

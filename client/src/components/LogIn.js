@@ -6,7 +6,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 function LogIn() {
-  const { logIn, setLogIn, setUser, setEvents,setHostedEvents } = useGlobalState();
+  const { logIn, setLogIn, setUser, setEvents, setHostedEvents } = useGlobalState();
   const [error, setError] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const history = useHistory();
@@ -44,52 +44,73 @@ function LogIn() {
     },
   });
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <div className="parent-container">
       <div className="form-card">
         <h1 className="form-name">Log In</h1>
         <div className="btn-wrapper" style={{ textAlign: 'center' }}>
-              <p className="message">Don't have an account yet? {
-                <button
+          <p className="message">
+            Don't have an account yet? {
+              <button
                 className="signup-btn"
                 type="click"
                 onClick={() => setLogIn(!logIn)}
                 style={{ color: '#483C32' }}
               >
                 Sign Up
-              </button>}</p>
-            </div><br></br>
+              </button>}
+          </p>
+        </div>
+        <br></br>
         <div className="card-body">
           <form onSubmit={formik.handleSubmit}>
-            <div className="input-wrapper">
-              <label htmlFor="username" className="form-label">Username</label>
-              <input
-                id="username"
-                name="username"
-                className="form-input"
-                onChange={formik.handleChange}
-                value={formik.values.username}
-              />
-            </div><br></br>
-            <div className="input-wrapper">
-              <label htmlFor="password" className="form-label">Password</label>
-              <div className="password-input-wrapper">
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  className="form-input"
-                  onChange={formik.handleChange}
-                  value={formik.values.password}
-                />
-                
+            {["username", "password"].map((field) => (
+              <div key={field} className="input-wrapper">
+                <label htmlFor={field} className="form-label">
+                  {field.charAt(0).toUpperCase() + field.slice(1)}
+                </label>
+                {field === "password" ? (
+                  <div className="password-input-wrapper">
+                    <input
+                      id={field}
+                      name={field}
+                      type={showPassword ? "text" : "password"}
+                      className="form-input"
+                      onChange={formik.handleChange}
+                      value={formik.values[field]}
+                    />
+                    <span onClick={togglePasswordVisibility}>
+                      {showPassword ? (
+                        <FontAwesomeIcon icon={faEyeSlash} />
+                      ) : (
+                        <FontAwesomeIcon icon={faEye} />
+                      )}
+                    </span>
+                  </div>
+                ) : (
+                  <input
+                    id={field}
+                    name={field}
+                    className="form-input"
+                    onChange={formik.handleChange}
+                    value={formik.values[field]}
+                  />
+                )}
+                <br></br>
               </div>
-            </div>
+            ))}
             <div className="error-message" style={{ textAlign: 'center', width: '100%', margin: '0 auto' }}>
-                {error ? <p>Username or Password is incorrect</p> : null}
-            </div><br></br>
+              {error ? <p>Username or Password is incorrect</p> : null}
+            </div>
+            <br></br>
             <div className="submit-button-wrapper">
-              <button className="submit-button" type="submit">Submit</button>
+              <button className="submit-button" type="submit">
+                Submit
+              </button>
             </div>
           </form>
         </div>

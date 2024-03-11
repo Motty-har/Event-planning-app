@@ -590,7 +590,9 @@ textarea {
   flex-direction: column;
   color: #483C32;
 }
-
+.accept-decline-button{
+  text-align: center;
+}
 .single-event-card-details p {
   margin: 8px 0;
 }

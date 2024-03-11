@@ -5,16 +5,19 @@ import { useGlobalState } from "./Context";
 
 function Event() {
   const { event_id } = useParams();
-  const [event, setEvent] = useState();
-  const [tasks, setTasks] = useState();
-  const [invites, setInvites] = useState();
+  const [event, setEvent] = useState(null);
+  const [tasks, setTasks] = useState(null);
+  const [invites, setInvites] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [hostId, setHostID] = useState(null);
   const [selectedUserId, setSelectedUserId] = useState('');
+  const [eventStatus, setEventStatus] = useState('')
   const history = useHistory();
   const { user } = useGlobalState();
 
   useEffect(() => {
+    setIsLoading(true); // Set loading to true before fetching data
+
     fetch(`/get_event/${event_id}`)
       .then((resp) => resp.json())
       .then((eventData) => {
@@ -24,7 +27,32 @@ function Event() {
         setInvites(eventData.invitations);
         setIsLoading(false);
       });
-  }, []);
+  }, [event_id]);
+
+  useEffect(() => {
+    if (invites && invites.length > 0 && eventStatus !== "") {
+      const i = invites.filter((invite) => invite.user_id === user.id);
+      if (i.length > 0) {
+        fetch(`/event_status/${i[0].id}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            eventStatus: eventStatus,
+          }),
+        })
+        .then(r => r.json())
+        .then((i) => {
+          setInvites((prevInvites) =>
+            prevInvites.map((invite) =>
+              invite.id === i.id ? i : invite
+            )
+          );
+        })
+      }
+    }
+  }, [eventStatus, user.id]);
 
   function toggleIsCompleted(taskId) {
     setTasks((tasks) =>
@@ -97,12 +125,21 @@ function Event() {
               <p className="single-event-card-description">
                 <strong>Description:</strong> {event.description}
               </p>
-              <p className="event-card-status">
-                <strong>Status:</strong>{" "}
-                {event.invitations.map((invite) =>
-                  invite.user.id === user.id ? invite.status : null
-                )}
-              </p>
+              {user.id !== event.host_id ?
+              (<div> 
+                {invites.map((invite) =>
+                  <div key={invite.id}>
+                  <div className="event-card-status"> 
+                  {invite.user.id === user.id ? (<p><strong>Status:</strong> {invite.status}</p>) : null}
+                  </div>
+                  {invite.user.id === user.id && invite.status === 'pending' ? 
+                  (<div className="accept-decline-button">
+                  <button onClick={() => setEventStatus('accepted')}>Accept</button> <button onClick={() => setEventStatus('declined')}>Decline</button>
+                </div>): null}
+                </div>
+                )} 
+              </div>
+              ): null}
             </div>
           </div>
         )}

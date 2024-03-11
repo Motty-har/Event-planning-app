@@ -30,7 +30,6 @@ function SignUp() {
     },
     validationSchema: formSchema,
     onSubmit: (values) => {
-      console.log(values)
       fetch("signup", {
         method: "POST",
         headers: {
@@ -64,103 +63,43 @@ function SignUp() {
   return (
     <div className="parent-container">
       <div className="form-card">
-      <h1 className="form-name">Sign Up</h1>
-      <div className="btn-wrapper" style={{ textAlign: 'center' }}>
-              <p className="message">Have an account already?{      <button
-                className="signup-btn"
-                type="click"
-                onClick={() => setLogIn(!logIn)}
-                style={{ color: '#483C32' }}
-              >
-                Log In
-              </button>}</p>
-            </div><br></br>
+        <h1 className="form-name">Sign Up</h1>
+        <div className="btn-wrapper" style={{ textAlign: 'center' }}>
+          <p className="message">
+            Have an account already?
+            <button
+              className="signup-btn"
+              type="click"
+              onClick={() => setLogIn(!logIn)}
+              style={{ color: '#483C32' }}
+            >
+              Log In
+            </button>
+          </p>
+        </div>
+        <br></br>
         <div className="card-body">
           <form onSubmit={formik.handleSubmit}>
-            <label htmlFor="firstName">First Name</label>
-            <input
-              id="firstName"
-              name="firstName"
-              className={formik.errors.firstName ? "error-input" : ""}
-              onChange={formik.handleChange}
-              value={formik.values.firstName}
-            />
-            {formik.errors.firstName && (
-              <p style={{ color: "red", textAlign: "center" }}>
-                {formik.errors.firstName}
-              </p>
+            {["firstName", "lastName", "email", "username", "password"].map((field) => (
+              <React.Fragment key={field}>
+                <label htmlFor={field}>{field.charAt(0).toUpperCase() + field.slice(1)}</label>
+                <input
+                  id={field}
+                  name={field}
+                  type={field === "email" ? "email" : showPassword ? "text" : "password"}
+                  className={formik.errors[field] ? "error-input" : ""}
+                  onChange={formik.handleChange}
+                  value={formik.values[field]}
+                />
+                {formik.errors[field] && (
+                  <p style={{ color: "red", textAlign: "center" }}>{formik.errors[field]}</p>
+                )}
+                {formik.errors[field] ? null : <br />}
+              </React.Fragment>
+            ))}
+            {error && (
+              <p style={{ color: "red", textAlign: "center" }}>Username already exists</p>
             )}
-            {formik.errors.firstName ? null : <br />}
-            <label htmlFor="lastName">Last Name</label>
-            <input
-              id="lastName"
-              name="lastName"
-              className={formik.errors.lastName ? "error-input" : ""}
-              onChange={formik.handleChange}
-              value={formik.values.lastName}
-            />
-            {formik.errors.lastName && (
-              <p style={{ color: "red", textAlign: "center" }}>
-                {formik.errors.lastName}
-              </p>
-            )}
-            {formik.errors.lastName ? null : <br />}
-            <label htmlFor="email">Email</label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              className={formik.errors.email ? "error-input" : ""}
-              onChange={formik.handleChange}
-              value={formik.values.email}
-            />
-            {formik.errors.email && (
-              <p style={{ color: "red", textAlign: "center" }}>
-                {formik.errors.email}
-              </p>
-            )}
-            {formik.errors.email ? null : <br />}
-            <label htmlFor="username">Username</label>
-            <input
-              id="username"
-              name="username"
-              className={formik.errors.username ? "error-input" : ""}
-              onChange={formik.handleChange}
-              value={formik.values.username}
-            />
-            {formik.errors.username && (
-              <p style={{ color: "red", textAlign: "center" }}>
-                {formik.errors.username}
-              </p>
-            )}
-            {formik.errors.username ? null : <br />}
-            <label htmlFor="password" style={{ display: 'flex', alignItems: 'center' }}>
-              Password
-              <span
-                onClick={togglePasswordVisibility}
-                style={{ marginLeft: '10px', cursor: 'pointer' }}
-              >
-                {showPassword ? <FontAwesomeIcon icon={faEyeSlash} /> : <FontAwesomeIcon icon={faEye} />}
-              </span>
-            </label>
-            <input
-              id="password"
-              name="password"
-              type={showPassword ? "text" : "password"}
-              className={formik.errors.password ? "error-input" : ""}
-              onChange={formik.handleChange}
-              value={formik.values.password}
-            />
-            {formik.errors.password && (
-              <p style={{ color: "red", textAlign: "center" }}>
-                {formik.errors.password}
-              </p>
-            )}
-            {error ? (
-              <p style={{ color: "red", textAlign: "center" }}>
-                Username already exists
-              </p>
-            ) : null}
             <div className="submit-button-wrapper">
               <button className="submit-button">Submit</button>
             </div>

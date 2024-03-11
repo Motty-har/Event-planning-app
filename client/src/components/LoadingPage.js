@@ -20,7 +20,7 @@ const LoadingPage = () => {
     >
       <div style={{ textAlign: "center" }}>
         <h2>Loading...</h2>
-        <ClipLoader color={"#36D7B7"} loading={true} css={override} size={50} />
+        <ClipLoader color={"#483C32"} loading={true} css={override} size={50} />
       </div>
     </div>
   );

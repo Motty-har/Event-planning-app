@@ -6,16 +6,16 @@ import { useGlobalState } from "./Context";
 import TaskCard from "./TaskCard";
 
 function CreateTasks() {
-  const { selectedUsers,setSelectedUsers } = useGlobalState();
+  const { selectedUsers, setSelectedUsers } = useGlobalState();
   const { event_id } = useParams();
   const [tasks, setTasks] = useState([]);
   const history = useHistory();
-  
+
   useEffect(() => {
     fetch(`/event_invitations/${event_id}`)
       .then(r => r.json())
-      .then(r => setSelectedUsers(r))
-  },[])
+      .then(r => setSelectedUsers(r));
+  }, [event_id, setSelectedUsers]);
 
   const formSchema = yup.object({
     description: yup.string().required("Description is required").max(100),
@@ -26,19 +26,18 @@ function CreateTasks() {
   const sortedSelectedUsers = selectedUsers.slice().sort((a, b) => {
     return a.last_name.localeCompare(b.last_name);
   });
- 
+
   function submitTasks() {
     if (tasks.length === 0) {
-      
       const confirmation = window.confirm("Are you sure you don't want to create any tasks for this event?");
       if (confirmation) {
         proceedWithSubmit();
       }
-    }else{
-      proceedWithSubmit()
+    } else {
+      proceedWithSubmit();
     }
   }
-  
+
   function proceedWithSubmit() {
     fetch(`/create_tasks/${event_id}`, {
       method: 'POST',
@@ -57,7 +56,7 @@ function CreateTasks() {
         console.error('Error submitting tasks:', error);
       });
   }
-  
+
   const formik = useFormik({
     initialValues: {
       description: "",
@@ -66,10 +65,8 @@ function CreateTasks() {
     },
     validationSchema: formSchema,
     onSubmit: (values) => {
-      console.log(values);
-
       const [userId, firstName, lastName] = values.assignedTo.split(" ");
-      
+
       setTasks((prevTasks) => [
         ...prevTasks,
         {
@@ -106,7 +103,6 @@ function CreateTasks() {
               <div className="error-message">{formik.errors.description}</div>
             )}
           </div>
-
           <div>
             <label htmlFor="dueDate" >Due Date:</label>
             <input
@@ -122,7 +118,6 @@ function CreateTasks() {
               <div className="error-message">{formik.errors.dueDate}</div>
             )}
           </div>
-
           <div>
             <label htmlFor="assignedTo">Assigned To (Optional):</label>
             <select
@@ -144,8 +139,7 @@ function CreateTasks() {
             {formik.touched.assignedTo && formik.errors.assignedTo && (
               <div className="error-message">{formik.errors.assignedTo}</div>
             )}
-          </div><br></br>
-
+          </div><br />
           <div className="submit-button-container">
             <button
               type="submit"
@@ -156,7 +150,7 @@ function CreateTasks() {
           </div>
         </form>
       </div>
-      {tasks.length > 0 ? (
+      {tasks.length > 0 && (
         <div className="task-container">
           {tasks.map((task, index) => (
             <TaskCard
@@ -168,7 +162,7 @@ function CreateTasks() {
             />
           ))}
         </div>
-      ) : null}
+      )}
       <div className="submit-button-container">
         <button
           type="button"
@@ -177,7 +171,7 @@ function CreateTasks() {
         >
           Submit Tasks
         </button>
-      </div><br></br><br></br>
+      </div><br /><br />
     </div>
   );
 }

@@ -10,26 +10,30 @@ import CreateEventForm from "./CreateEventForm";
 import Invitations from "./Invitations";
 import CreateTasks from "./CreateTasks";
 import Event from "./Event";
+import LoadingPage from "./LoadingPage";
 
 function App() {
-  const [loading, setLoading] = useState(true)
-  const { user, setUser, events, setEvents, hostedEvents, setHostedEvents } = useGlobalState()
+  const [loading, setLoading] = useState(true);
+  const { user, setUser, events, setEvents, hostedEvents, setHostedEvents } = useGlobalState();
 
   useEffect(() => {
     fetch('/check_session')
-    .then(r => r.json())
-    .then(user => {
-      console.log(user)
-      setUser(user)
-      setEvents(user.invitations)
-      setHostedEvents(user.hosted_events)
-      setLoading(false)
-    })
-    .catch((error) => {
-      console.error("Error fetching user data:", error);
-      setLoading(false)
-    });
-  },[])
+      .then((response) => response.json())
+      .then((userData) => {
+        setUser(userData);
+        setEvents(userData.invitations);
+        setHostedEvents(userData.hosted_events);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return <LoadingPage />;
+  }
 
   return (
     <Router>
@@ -39,10 +43,10 @@ function App() {
           <Home />
         </Route>
         <Route path='/sign-up-log-in'>
-            <ParentForm />
+          <ParentForm />
         </Route>
         <Route path='/upcoming-events'>
-            <DisplayEvents />
+          <DisplayEvents />
         </Route>
         <Route path='/my-events'>
           <DisplayMyEvents />

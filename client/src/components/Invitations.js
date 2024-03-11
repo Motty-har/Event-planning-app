@@ -3,7 +3,7 @@ import { useParams, useHistory } from 'react-router-dom';
 import { useGlobalState } from "./Context";
 import LoadingPage from './LoadingPage';
 
-const Invitations = () => {
+function Invitations(){
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user, selectedUsers, setSelectedUsers } = useGlobalState();
@@ -11,25 +11,36 @@ const Invitations = () => {
   const history = useHistory();
 
   useEffect(() => {
-    fetch('/users')
-      .then(response => response.json())
-      .then(data => {
-        setUsers(data.filter(u => u.id != user.id));
-        setLoading(false);
-      })
-      .catch(error => {
-        console.error('Error fetching users:', error);
-        setLoading(false); 
-      });
-      fetch(`/event_invitations/${event_id}`)
-      .then(r => r.json())
-      .then(r => setSelectedUsers(r))
-  }, []);
+    const fetchUsers = () => {
+      fetch('/users')
+        .then(response => response.json())
+        .then(data => {
+          setUsers(data.filter(u => u.id !== user.id));
+          setLoading(false);
+        })
+        .catch(error => {
+          console.error('Error fetching users:', error);
+          setLoading(false); 
+        });
+      };
+
+      const fetchInvitations = () => {
+        fetch(`/event_invitations/${event_id}`)
+          .then(r => r.json())
+          .then(r => setSelectedUsers(r));
+      };
+
+      fetchUsers();
+      fetchInvitations();
+  }, [user.id, event_id, setSelectedUsers]);
+
   if (loading) {
     return <LoadingPage />;
   }
-  console.log(selectedUsers)
-  function handleUserToggle(selectedUser){
+
+  console.log(selectedUsers);
+
+  const handleUserToggle = (selectedUser) => {
     setSelectedUsers(prevSelectedUsers => {
       if (prevSelectedUsers.find(user => user.id === selectedUser.id)) {
         return prevSelectedUsers.filter(user => user.id !== selectedUser.id);
@@ -40,7 +51,6 @@ const Invitations = () => {
   };
 
   const handleSubmit = () => {
-
     const selectedUsersIds = selectedUsers.map(user => user.id);
     const data = {
       user_id: user.id,

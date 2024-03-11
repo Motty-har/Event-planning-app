@@ -24,7 +24,7 @@ function CreateEventForm() {
     location: Yup.string().required('Location is required'),
   });
 
-  const onSubmit = (values) => {
+  const handleSubmit = (values) => {
     fetch(`/create_event/${user.id}`, {
       method: 'POST',
       headers: {
@@ -49,56 +49,56 @@ function CreateEventForm() {
 
   return (
     <div className='container'>
-    <div className="event-form-card">
-      <h2 className="create-event-header">Create Event</h2>
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={onSubmit}
-      >
-        <Form className="create-event-form">
-          <div className="form-group">
-            <label htmlFor="title">Title</label>
-            <Field type="text" id="title" name="title" className="form-input" />
-            <ErrorMessage name="title" component="div" className="error" />
-          </div>
+      <div className="event-form-card">
+        <h2 className="create-event-header">Create Event</h2>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          <Form className="create-event-form">
+            <div className="form-group">
+              <label htmlFor="title">Title</label>
+              <Field type="text" id="title" name="title" className="form-input" />
+              <ErrorMessage name="title" component="div" className="error" />
+            </div>
 
-          <div className="form-group-description">
-            <label htmlFor="description">Description</label>
-            <Field
-              as="textarea"
-              id="description"
-              name="description"
-              className="form-input"
-            />
-            <ErrorMessage name="description" component="div" className="error" />
-          </div><br></br>
+            <div className="form-group-description">
+              <label htmlFor="description">Description</label>
+              <Field
+                as="textarea"
+                id="description"
+                name="description"
+                className="form-input"
+              />
+              <ErrorMessage name="description" component="div" className="error" />
+            </div><br></br>
 
-          <div className="form-group">
-            <label htmlFor="date">Date</label>
-            <Field type="date" id="date" name="date" className="form-input" />
-            <ErrorMessage name="date" component="div" className="error" />
-          </div>
+            <div className="form-group">
+              <label htmlFor="date">Date</label>
+              <Field type="date" id="date" name="date" className="form-input" />
+              <ErrorMessage name="date" component="div" className="error" />
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="time">Time</label>
-            <Field type="time" id="time" name="time" className="form-input" />
-            <ErrorMessage name="time" component="div" className="error" />
-          </div>
+            <div className="form-group">
+              <label htmlFor="time">Time</label>
+              <Field type="time" id="time" name="time" className="form-input" />
+              <ErrorMessage name="time" component="div" className="error" />
+            </div>
 
-          <div className="form-group">
-            <label htmlFor="location">Location</label>
-            <Field type="text" id="location" name="location" className="form-input" />
-            <ErrorMessage name="location" component="div" className="error" />
-          </div>
+            <div className="form-group">
+              <label htmlFor="location">Location</label>
+              <Field type="text" id="location" name="location" className="form-input" />
+              <ErrorMessage name="location" component="div" className="error" />
+            </div>
 
-          <div className="form-group">
-            <button type="submit" className="submit-button">
-              Create Event
-            </button>
-          </div>
-        </Form>
-      </Formik>
+            <div className="form-group">
+              <button type="submit" className="submit-button">
+                Create Event
+              </button>
+            </div>
+          </Form>
+        </Formik>
       </div>
     </div>
   );
