@@ -185,6 +185,22 @@ class DeleteTasks(Resource):
         else:
             return {'error': 'Task not found'}, 404
         
+class EventStatus(Resource):
+
+    def patch(self, invite_id):
+        data = request.get_json()
+
+        status = data.get('eventStatus')
+        invite = Invitation.query.filter_by(id=invite_id).first()
+
+        if invite: 
+            invite.status = status
+            db.session.commit()
+            return invite.to_dict(), 200       
+        else:
+            return {'error': 'Invite not found'}, 404
+
+        
 api.add_resource(CheckSession, '/check_session', endpoint='check_session')
 api.add_resource(Signup, '/signup')
 api.add_resource(Login, '/login')
@@ -198,6 +214,7 @@ api.add_resource(GetEvent, '/get_event/<int:event_id>')
 api.add_resource(TaskStatus, '/task_status/<int:task_id>')
 api.add_resource(DeleteTasks, '/delete_task/<int:task_id>')
 api.add_resource(AssignTask, '/assign_task/<int:task_id>/<int:user_id>')
+api.add_resource(EventStatus, '/event_status/<int:invite_id>')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
