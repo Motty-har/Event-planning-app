@@ -33,6 +33,55 @@ body {
   font-family: 'Arial', sans-serif;
   border-radius: 10px;
 }
+.notifications-container {
+  display: flex;
+  align-items: center;
+}
+
+.left-content {
+  margin-right: 10px;
+}
+.notification-list {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 300px;
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: #AEC6CF;
+  box-shadow: 0 2px 4px #483C32;
+  border-radius: 8px;
+  border: 3px solid #483C32;
+  padding: 10px;
+}
+.no-notifications {
+  padding: 12px;
+  background-color: #AEC6CF;
+  color: #483C32;
+  border-radius: 3px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  font-size: 26px;
+}
+.notification-item {
+  padding: 10px;
+  border: 1px solid #483C32;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.notifications {
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin: 15px;
+  z-index: 9999;
+}
 .left-links {
   display: flex;
 }

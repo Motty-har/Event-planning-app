@@ -1,6 +1,10 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import { useGlobalState } from "./Context";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Notifications from "./Notifications";
+
 
 function Navbar() {
   const { user, setUser } = useGlobalState();
@@ -26,6 +30,9 @@ function Navbar() {
     <div>
       <div>
         <h1 className="page-header">SimplyPlan</h1>
+        <div className='notifications'>
+        <Notifications />
+        </div>
       </div>
       <div className="navbar">
         <div className="left-links">

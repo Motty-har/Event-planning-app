@@ -1,9 +1,8 @@
 from flask import Flask, request, session
 from flask_restful import Resource, Api
-from config import app, db, api
-from models import * 
+from config import app, db, api, socketio
+from models import *
 from datetime import datetime
-import ipdb
 
 @app.before_request
 def check_if_logged_in():
@@ -34,14 +33,14 @@ class Signup(Resource):
 
         user = User(first_name=first_name, last_name=last_name, username=username, email=email)
         user.password_hash = password
-        
+
         db.session.add(user)
         db.session.commit()
 
         session['user_id'] = user.id
 
         return user.to_dict(), 200
-    
+
 class Login(Resource):
     def post(self):
         request_json = request.get_json()
@@ -60,7 +59,7 @@ class Logout(Resource):
     def delete(self):
         session['user_id'] = None
         return False, 204
-    
+
 class CreateEvent(Resource):
     def post(self, user_id):
         user_id = session.get('user_id')
@@ -74,31 +73,26 @@ class CreateEvent(Resource):
         date_str = event_data.get('date')
         time_str = event_data.get('time')
         location = event_data.get('location')
-        
 
         date = datetime.strptime(date_str, '%Y-%m-%d').date()
         time = datetime.strptime(time_str, '%H:%M').time()
 
-        event = Event(title=title, description=description, date=date, time=time, location=location, host_id = user_id)
+        event = Event(title=title, description=description, date=date, time=time, location=location, host_id=user_id)
         db.session.add(event)
         db.session.commit()
 
+        socketio.emit('notification', event.to_dict())
         return event.to_dict(), 200
 
 class Users(Resource):
     def get(self):
-
         users = User.query.order_by(User.last_name).all()
-
         return [user.to_dict() for user in users], 200
 
 class EventInvitations(Resource):
     def get(self, event_id):
-
-        invites = Invitation.query.filter_by(event_id = event_id).all()
-        
+        invites = Invitation.query.filter_by(event_id=event_id).all()
         return [invite.user.to_dict() for invite in invites], 200
-    
 
 class CreateInvitations(Resource):
     def post(self):
@@ -106,7 +100,7 @@ class CreateInvitations(Resource):
         invitees = data.get('selected_users')
         event_id = data.get('event_id')
 
-        Invitation.query.filter_by(event_id = event_id).delete()
+        Invitation.query.filter_by(event_id=event_id).delete()
         db.session.commit()
 
         for user in invitees:
@@ -116,10 +110,10 @@ class CreateInvitations(Resource):
                 status='pending'
             )
             db.session.add(invitation)
-        
+
         db.session.commit()
 
-        return { 'Success': True }, 200
+        return {'Success': True}, 200
 
 class CreateTasks(Resource):
     def post(self, event_id):
@@ -142,11 +136,8 @@ class CreateTasks(Resource):
 
 class GetEvent(Resource):
     def get(self, event_id):
-        
         event = Event.query.filter_by(id=event_id).first()
-        
-       
-        return  event.to_dict(), 200
+        return event.to_dict(), 200
 
 class TaskStatus(Resource):
     def patch(self, task_id):
@@ -154,13 +145,13 @@ class TaskStatus(Resource):
 
         if task:
             task.completed = not task.completed
-            db.session.commit()  
+            db.session.commit()
 
             task_dict = task.to_dict()
             return task_dict, 200
         else:
             return {"error": "Task not found"}, 404
-        
+
 class AssignTask(Resource):
     def patch(self, task_id, user_id):
         task = Task.query.filter_by(id=task_id).first()
@@ -171,8 +162,7 @@ class AssignTask(Resource):
 
             return task.to_dict(), 200
         else:
-             return {'error': 'Task not found'}, 404
-        
+            return {'error': 'Task not found'}, 404
 
 class DeleteTasks(Resource):
     def delete(self, task_id):
@@ -184,23 +174,21 @@ class DeleteTasks(Resource):
             return {'message': 'Task deleted successfully'}, 200
         else:
             return {'error': 'Task not found'}, 404
-        
-class EventStatus(Resource):
 
+class EventStatus(Resource):
     def patch(self, invite_id):
         data = request.get_json()
 
         status = data.get('eventStatus')
         invite = Invitation.query.filter_by(id=invite_id).first()
 
-        if invite: 
+        if invite:
             invite.status = status
             db.session.commit()
-            return invite.to_dict(), 200       
+            return invite.to_dict(), 200
         else:
             return {'error': 'Invite not found'}, 404
 
-        
 api.add_resource(CheckSession, '/check_session', endpoint='check_session')
 api.add_resource(Signup, '/signup')
 api.add_resource(Login, '/login')
@@ -216,6 +204,19 @@ api.add_resource(DeleteTasks, '/delete_task/<int:task_id>')
 api.add_resource(AssignTask, '/assign_task/<int:task_id>/<int:user_id>')
 api.add_resource(EventStatus, '/event_status/<int:invite_id>')
 
-if __name__ == '__main__':
-    app.run(port=5555, debug=True)
+@socketio.on('connect')
+def handle_connect():
+    print('Client connected')
 
+@socketio.on('disconnect')
+def handle_disconnect():
+    print('Client disconnected')
+
+@socketio.on('notification')
+def handle_notification(data):
+    # Process notification data as needed
+    print('Received notification:', data)
+
+
+if __name__ == '__main__':
+    socketio.run(app, port=5555, debug=True)

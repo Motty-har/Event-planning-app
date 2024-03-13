@@ -8,6 +8,7 @@ export const GlobalStateProvider = ({ children }) => {
     const [events, setEvents] = useState([])
     const [hostedEvents, setHostedEvents] = useState([])
     const [selectedUsers, setSelectedUsers] = useState([]);
+    const [notifications, setNotifications] = useState([]);
   
     const globalState = {
       user, setUser,
@@ -15,6 +16,7 @@ export const GlobalStateProvider = ({ children }) => {
       events, setEvents,
       hostedEvents, setHostedEvents,
       selectedUsers, setSelectedUsers,
+      notifications, setNotifications,
     };
 
   return (

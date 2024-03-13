@@ -8,6 +8,7 @@ from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from sqlalchemy import MetaData
+from flask_socketio import SocketIO
 
 # Local imports
 
@@ -32,4 +33,5 @@ api = Api(app)
 # Instantiate CORS
 CORS(app)
 
-bcrypt = Bcrypt(app)            
+bcrypt = Bcrypt(app)          
+socketio = SocketIO(app, cors_allowed_origins="*")  
