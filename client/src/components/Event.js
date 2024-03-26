@@ -148,32 +148,34 @@ function Event() {
         {event && user.id === hostId && (
           <div>
             <hr />
-            <h1 className="invite-header">Invites</h1>
-            <div className="add-button-container">
-              <button
-                className="add-button"
-                style={{ padding: "8px", fontSize: "16px" }}
-                onClick={() => history.push(`/invitations/${event_id}`)}
-              >
-                Manage Invitations
-              </button>
-            </div>
             {invites && invites.length > 0 ? (
-              invites.map((invite) => (
-                <div key={invite.id} className="invite-card">
-                  <h3>
-                    {invite.user.first_name} {invite.user.last_name}
-                  </h3>
-                  <p>
-                    <strong>Email:</strong> {invite.user.email}
-                  </p>
-                  <p>
-                    <strong>Status:</strong>{" "}
-                    {invite.status.charAt(0).toUpperCase() +
-                      invite.status.slice(1)}
-                  </p>
+              <div>
+                <h1 className="invite-header">Invites</h1>
+                <div className="add-button-container">
+                  <button
+                    className="add-button"
+                    style={{ padding: "8px", fontSize: "16px" }}
+                    onClick={() => history.push(`/invitations/${event_id}`)}
+                  >
+                    Manage Invitations
+                  </button>
                 </div>
-              ))
+                {invites.map((invite) => (
+                  <div key={invite.id} className="invite-card">
+                    <h3>
+                      {invite.user.first_name} {invite.user.last_name}
+                    </h3>
+                    <p>
+                      <strong>Email:</strong> {invite.user.email}
+                    </p>
+                    <p>
+                      <strong>Status:</strong>{" "}
+                      {invite.status.charAt(0).toUpperCase() +
+                        invite.status.slice(1)}
+                    </p>
+                  </div>
+                ))}
+              </div>
             ) : (
               <div style={{ textAlign: "center", marginTop: "10px" }}>
                 <h1>No Invites yet</h1>

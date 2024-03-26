@@ -34,4 +34,4 @@ api = Api(app)
 CORS(app)
 
 bcrypt = Bcrypt(app)          
-socketio = SocketIO(app, cors_allowed_origins="*")  
+socketio = SocketIO(app, manage_session=False, cors_allowed_origins="*")  

@@ -3,6 +3,9 @@ from flask_restful import Resource, Api
 from config import app, db, api, socketio
 from models import *
 from datetime import datetime
+from flask_socketio import send
+import ipdb
+
 
 @app.before_request
 def check_if_logged_in():
@@ -14,11 +17,10 @@ def check_if_logged_in():
 class CheckSession(Resource):
     def get(self):
         user_id = session.get('user_id')
-
         if user_id:
             user = User.query.get(user_id)
             return user.to_dict(), 200
-
+        
         return False, 401
 
 class Signup(Resource):
@@ -80,7 +82,6 @@ class CreateEvent(Resource):
         event = Event(title=title, description=description, date=date, time=time, location=location, host_id=user_id)
         db.session.add(event)
         db.session.commit()
-
         socketio.emit('notification', event.to_dict())
         return event.to_dict(), 200
 
@@ -99,22 +100,28 @@ class CreateInvitations(Resource):
         data = request.get_json()
         invitees = data.get('selected_users')
         event_id = data.get('event_id')
-
+        
+        # Delete existing invitations
         Invitation.query.filter_by(event_id=event_id).delete()
         db.session.commit()
-
-        for user in invitees:
+        
+        # Create new invitations
+        for user_id in invitees:
             invitation = Invitation(
                 event_id=event_id,
-                user_id=user,
+                user_id=user_id,
                 status='pending'
             )
             db.session.add(invitation)
-
         db.session.commit()
-
+        event = Event.query.filter_by(id = event_id).first()
+        for user_id in invitees:
+            if user_id in user_sessions:
+                sid = user_sessions[user_id]
+                socketio.emit('invitation', event.to_dict(), room=sid)
+        
         return {'Success': True}, 200
-
+    
 class CreateTasks(Resource):
     def post(self, event_id):
         tasks = request.get_json()
@@ -204,18 +211,30 @@ api.add_resource(DeleteTasks, '/delete_task/<int:task_id>')
 api.add_resource(AssignTask, '/assign_task/<int:task_id>/<int:user_id>')
 api.add_resource(EventStatus, '/event_status/<int:invite_id>')
 
+user_sessions = {}
 @socketio.on('connect')
 def handle_connect():
-    print('Client connected')
+    user_id = request.args.get('user_id')
+    if user_id:
+        user_sessions[user_id] = request.sid
+        print(f'Client with user ID {user_id} connected')
+    else:
+        print('User ID not provided in the connection request')
+    
 
 @socketio.on('disconnect')
 def handle_disconnect():
-    print('Client disconnected')
+    disconnected_user_id = None
+    for user_id, sid in user_sessions.items():
+        if sid == request.sid:
+            disconnected_user_id = user_id
+            break
 
-@socketio.on('notification')
-def handle_notification(data):
-    # Process notification data as needed
-    print('Received notification:', data)
+    if disconnected_user_id:
+        del user_sessions[disconnected_user_id]
+        print(f'Client with user ID {disconnected_user_id} disconnected')
+    else:
+        print('Unknown client disconnected')
 
 
 if __name__ == '__main__':

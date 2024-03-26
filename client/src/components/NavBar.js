@@ -30,9 +30,9 @@ function Navbar() {
     <div>
       <div>
         <h1 className="page-header">SimplyPlan</h1>
-        <div className='notifications'>
+        {user ? (<div className='notifications'>
         <Notifications />
-        </div>
+        </div>) : null}
       </div>
       <div className="navbar">
         <div className="left-links">

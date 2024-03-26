@@ -11,38 +11,51 @@ import Invitations from "./Invitations";
 import CreateTasks from "./CreateTasks";
 import Event from "./Event";
 import LoadingPage from "./LoadingPage";
-import socket from './SocketService'; // Import the Socket.IO service
+import socket from './SocketService'; 
+import { io } from "socket.io-client";
+import { faCommentsDollar } from "@fortawesome/free-solid-svg-icons";
 
 function App() {
   const [loading, setLoading] = useState(true);
   const { user, setUser, events, setEvents, hostedEvents, setHostedEvents, setNotifications, notifications } = useGlobalState();
-  console.log(notifications)
+ 
   useEffect(() => {
-  fetch('/check_session')
-    .then((response) => response.json())
-    .then((userData) => {
-      setUser(userData);
-      setEvents(userData.invitations);
-      setHostedEvents(userData.hosted_events);
-      setLoading(false);
-      
-      // Connect to the Socket.IO server after fetching user data
-      socket.on('notification', (data) => {
-        // Update state with the received notification
+    fetch('/check_session')
+      .then((response) => response.json())
+      .then((userData) => {
+        setUser(userData);
+        setEvents(userData.invitations);
+        setHostedEvents(userData.hosted_events);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+        setLoading(false);
+      });
+  }, []);
+  
+  // Establish socket connection when userData is available
+  useEffect(() => {
+    
+    if (user && user.id) {
+      const socket = io.connect('http://localhost:5555', {
+        query: {
+          user_id: user.id
+        }
+      });
+  
+      socket.on('invitation', (data) => {
         console.log(data)
         setNotifications((prevNotifications) => [...prevNotifications, data]);
       });
-    })
-    .catch((error) => {
-      console.error("Error fetching user data:", error);
-      setLoading(false);
-    });
-
-  // Clean up the Socket.IO connection when the app unmounts
-  return () => {
-    socket.disconnect();
-  };
-}, []);
+  
+      // Disconnect socket when component unmounts or when user data changes
+      return () => {
+        socket.disconnect();
+      };
+    }
+  }, [user]); // Dependency on user state
+  
 
   if (loading) {
     return <LoadingPage />;

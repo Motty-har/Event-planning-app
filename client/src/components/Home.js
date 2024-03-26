@@ -57,12 +57,12 @@ const Home = () => {
           <h3>User Testimonials</h3>
           <div className="square-box-container">
             <div className="square-box">
-              <p>"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."</p>
-              <p>- John Doe</p>
+              <p>"I found the event planning process on this website incredibly intuitive and user-friendly. It made organizing our company retreat a breeze!"</p>
+              <p>- Lisa Davis</p>
             </div>
             <div className="square-box">
-              <p>"Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."</p>
-              <p>- Jane Smith</p>
+              <p>"This website has been a game-changer for me as an event organizer. The tools and resources available here have saved me countless hours of planning and coordination."</p>
+              <p>- Mark Hayden</p>
             </div>
           </div>
         </section>
@@ -71,17 +71,18 @@ const Home = () => {
           <h3>Featured Events</h3>
           <div className="square-box-container">
             <div className="square-box">
-              <p><strong>Event Name:</strong> Sample Event 1</p>
+              <p><strong>Event Name:</strong> Coding Bootcamp Open House</p>
               <p><strong>Date:</strong> January 15, 2023</p>
-              <p><strong>Description:</strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+              <p><strong>Description:</strong> Learn about our coding bootcamp program and meet the instructors. Snacks and refreshments provided.</p>
             </div>
             <div className="square-box">
-              <p><strong>Event Name:</strong> Sample Event 2</p>
+              <p><strong>Event Name:</strong> Conference on Artificial Intelligence</p>
               <p><strong>Date:</strong> February 28, 2023</p>
-              <p><strong>Description:</strong> Duis aute irure dolor in velit esse cillum dougiat nulla pariatur.</p>
+              <p><strong>Description:</strong> Annual conference discussing the latest trends and advancements in AI technology.</p>
             </div>
           </div>
         </section>
+
         <br />
       </div>
       <div className="divider"></div>
