@@ -82,7 +82,7 @@ class CreateEvent(Resource):
         event = Event(title=title, description=description, date=date, time=time, location=location, host_id=user_id)
         db.session.add(event)
         db.session.commit()
-        socketio.emit('notification', event.to_dict())
+        socketio.emit('notification', event.to_dict() )
         return event.to_dict(), 200
 
 class Users(Resource):
@@ -101,11 +101,9 @@ class CreateInvitations(Resource):
         invitees = data.get('selected_users')
         event_id = data.get('event_id')
         
-        # Delete existing invitations
         Invitation.query.filter_by(event_id=event_id).delete()
         db.session.commit()
         
-        # Create new invitations
         for user_id in invitees:
             invitation = Invitation(
                 event_id=event_id,
@@ -115,11 +113,6 @@ class CreateInvitations(Resource):
             db.session.add(invitation)
         db.session.commit()
         event = Event.query.filter_by(id = event_id).first()
-        for user_id in invitees:
-            if user_id in user_sessions:
-                sid = user_sessions[user_id]
-                socketio.emit('invitation', event.to_dict(), room=sid)
-        
         return {'Success': True}, 200
     
 class CreateTasks(Resource):

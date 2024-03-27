@@ -4,14 +4,12 @@ import { useGlobalState } from "./Context";
 
 function EventCard({ event, status }) {
   const { title, description, date, time, location, host_id } = event;
-  console.log(event)
   const { user } = useGlobalState();
   const history = useHistory();
 
   function handleClick() {
     history.push(`/upcoming-event/${event.id}`);
   }
-
   return (
     <div className="event-card" onClick={handleClick}>
       <h1 className="event-card-title">{title}</h1>

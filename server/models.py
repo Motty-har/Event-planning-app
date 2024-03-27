@@ -7,7 +7,7 @@ from sqlalchemy.ext.associationproxy import association_proxy
 class Event(db.Model, SerializerMixin):
     __tablename__ = 'events'
 
-    serialize_rules = ('-invitations.event', '-host.hosted_events', '-tasks.event')
+    serialize_rules = ('-invitations.event', '-host.hosted_events', '-host.invitations', '-host.tasks', '-host.notifications' '-tasks.event', '-notifications')
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
@@ -21,6 +21,7 @@ class Event(db.Model, SerializerMixin):
 
     tasks = db.relationship('Task', back_populates='event', cascade='all, delete-orphan')
     invitations = db.relationship('Invitation', back_populates='event')
+    notifications = db.relationship('Notification', back_populates='event')
 
     def __repr__(self):
         return f'<Event id={self.id} title={self.title} date={self.date} time={self.time} location={self.location}>'
@@ -29,7 +30,7 @@ class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
 
     serialize_rules = ('-invitations.user', '-invitations.event.tasks', '-invitations.event.host', '-invitations.event.invitations', 
-                       '-hosted_events.host', '-hosted_events.tasks.event','-hosted_events.tasks.user', '-hosted_events.invitations', '-tasks')
+                       '-hosted_events.host', '-hosted_events.tasks.event','-hosted_events.tasks.user', '-hosted_events.invitations', '-tasks', '-notifications.user', '-notifications.event.task', '-notifications.event.invitations', '-notifications.event.notifications', '-notifications.event.host.invitations', '-notification.event.host.hosted_events', '-notification.event.host.tasks', '-notification.event.host.notifications',)
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
@@ -41,6 +42,7 @@ class User(db.Model, SerializerMixin):
     invitations = db.relationship('Invitation', back_populates='user')
     hosted_events = db.relationship('Event', back_populates='host', cascade='all, delete-orphan')
     tasks = db.relationship('Task', back_populates='user')
+    notifications = db.relationship('Notification', back_populates='user')
 
     @hybrid_property
     def password_hash(self):
@@ -91,3 +93,20 @@ class Task(db.Model, SerializerMixin):
     def __repr__(self):
         return f'<Task id={self.id} description={self.description} due_date={self.due_date} ' \
             f'completed={self.completed} event_id={self.event_id} assigned_to={self.assigned_to}>'
+
+
+class Notification(db.Model, SerializerMixin):
+    __tablename__ = 'notifications'
+
+    serialize_rules = ('-user', '-event.tasks', '-event.invitations', '-event.host.invitations', '-event.host.hosted_events', '-event.host.tasks', '-event.host.notifications')
+    id = db.Column(db.Integer, primary_key=True)
+    invited_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
+
+    user = db.relationship('User', back_populates='notifications')
+    event = db.relationship('Event', back_populates='notifications')
+
+    def __repr__(self):
+        return f"<Notification(id={self.id}, user_id={self.invited_user_id}, event_id={self.event_id})>"
+
+

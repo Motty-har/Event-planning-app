@@ -16,20 +16,22 @@ const Notifications = () => {
   useEffect(() => {
     if (notifications.length > 0) {
       setNewestNotification(notifications[notifications.length - 1]);
-
-      const timeoutId = setTimeout(() => {
-        setNewestNotification(null);
-      }, 60000);
-
-      return () => clearTimeout(timeoutId);
     }
+    
+    const timeoutId = setTimeout(() => {
+      setNewestNotification(null);
+    }, 60000);
+
+    return () => clearTimeout(timeoutId);
   }, [notifications]);
 
+  
   return (
     <div className="notifications-container">
-      <div className="left-content">
-          <h1>{newestNotification ? (<p className='notification-item'>{newestNotification.title}</p>) : null}</h1>
-      </div>
+      {newestNotification ?
+      (<div className="new-notification">
+          <NotificationItem key={newestNotification.id} notification={newestNotification} newNotification={true} />
+      </div>) : null}
       <FontAwesomeIcon icon={faBell} size="2x" onClick={toggleNotifications} />
       {notificationCount > 0 && (
         <span className="notification-count">{notificationCount}</span>
@@ -42,7 +44,7 @@ const Notifications = () => {
         ) : (
         <div className="notification-list">
             {notifications.slice().reverse().map(notification => (
-                <NotificationItem key={notification.id} notification={notification} />
+                <NotificationItem key={notification.id} notification={notification} newNotification={false}/>
             ))}
         </div>
         )

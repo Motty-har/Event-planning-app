@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 function DisplayEvents() {
   const { events, user } = useGlobalState();
-
+  console.log(events)
   if (!user || events.length === 0) {
     return (
       <div className="no-events-container">

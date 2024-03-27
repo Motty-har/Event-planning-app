@@ -38,15 +38,44 @@ body {
   align-items: center;
 }
 
-.left-content {
+.new-notification{
+  animation: slideDown 0.3s ease-out;
+}
+.new-notification-item {
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  font-size: large;
+  box-shadow: 0 2px 4px #483C32;
+  border: 2px solid #483C32;
   margin-right: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: #FAF0E6;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 .notification-list {
   position: absolute;
   top: 100%;
   right: 0;
   width: 300px;
-  max-height: 300px;
+  max-height: fit-content;
   overflow-y: auto;
   background-color: #AEC6CF;
   box-shadow: 0 2px 4px #483C32;
@@ -74,13 +103,30 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
+
 .notifications {
   position: fixed;
   top: 0;
   right: 0;
   margin: 15px;
   z-index: 9999;
+}
+.close-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  padding: 5px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  color: black;
+}
+
+.close-button:hover {
+  color: #333;
 }
 .left-links {
   display: flex;

@@ -27,6 +27,9 @@ function App() {
         setEvents(userData.invitations);
         setHostedEvents(userData.hosted_events);
         setLoading(false);
+        setNotifications(userData.notifications.map(note => {
+          return note.event
+        }))
       })
       .catch((error) => {
         console.error("Error fetching user data:", error);
@@ -34,7 +37,7 @@ function App() {
       });
   }, []);
   
-  // Establish socket connection when userData is available
+  console.log(notifications)
   useEffect(() => {
     
     if (user && user.id) {
@@ -44,7 +47,7 @@ function App() {
         }
       });
   
-      socket.on('invitation', (data) => {
+      socket.on('notification', (data) => {
         console.log(data)
         setNotifications((prevNotifications) => [...prevNotifications, data]);
       });
