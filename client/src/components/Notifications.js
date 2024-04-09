@@ -6,31 +6,23 @@ import NotificationItem from './NotificationItem';
 
 
 const Notifications = () => {
-  const [showNotifications, setShowNotifications] = useState(false);
-  const [newestNotification, setNewestNotification] = useState(null)
-  const { notifications, setNotifications } = useGlobalState();
+  const { notifications, newestNotification, setNewestNotification,showNotifications, setShowNotifications } = useGlobalState();
   const notificationCount = notifications.length;
   const toggleNotifications = () => {
     setShowNotifications(!showNotifications);
   };
   useEffect(() => {
-    if (notifications.length > 0) {
-      setNewestNotification(notifications[notifications.length - 1]);
-    }
-    
     const timeoutId = setTimeout(() => {
       setNewestNotification(null);
     }, 60000);
-
     return () => clearTimeout(timeoutId);
-  }, [notifications]);
+  }, [newestNotification]);
 
-  
   return (
     <div className="notifications-container">
       {newestNotification ?
       (<div className="new-notification">
-          <NotificationItem key={newestNotification.id} notification={newestNotification} newNotification={true} />
+          <NotificationItem key={newestNotification.id} notification={newestNotification} newNotification={true}/>
       </div>) : null}
       <FontAwesomeIcon icon={faBell} size="2x" onClick={toggleNotifications} />
       {notificationCount > 0 && (

@@ -29,8 +29,13 @@ class Event(db.Model, SerializerMixin):
 class User(db.Model, SerializerMixin):
     __tablename__ = 'users'
 
-    serialize_rules = ('-invitations.user', '-invitations.event.tasks', '-invitations.event.host', '-invitations.event.invitations', 
-                       '-hosted_events.host', '-hosted_events.tasks.event','-hosted_events.tasks.user', '-hosted_events.invitations', '-tasks', '-notifications.user', '-notifications.event.task', '-notifications.event.invitations', '-notifications.event.notifications', '-notifications.event.host.invitations', '-notification.event.host.hosted_events', '-notification.event.host.tasks', '-notification.event.host.notifications',)
+    serialize_rules = ('-invitations.user', '-invitations.event.tasks', '-invitations.event.host', '-invitations.event.invitations',
+                       '-invitations.event.host.invitations', '-invitations.event.host.hosted_events', 
+                       '-invitations.event.host.tasks', '-invitations.event.host.notifications',
+                       '-hosted_events.host', '-hosted_events.tasks.event','-hosted_events.tasks.user', '-hosted_events.invitations', 
+                       '-tasks', '-notifications.user', '-notifications.event.task', '-notifications.event.invitations', 
+                       '-notifications.event.notifications', '-notifications.event.host.invitations', '-notification.event.host.hosted_events', 
+                       '-notification.event.host.tasks', '-notification.event.host.notifications',)
 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
@@ -62,7 +67,7 @@ class User(db.Model, SerializerMixin):
 class Invitation(db.Model, SerializerMixin):
     __tablename__ = 'invitations'
 
-    serialize_rules = ('-event.invitations', '-user.invitations')
+    serialize_rules = ('-event.invitations', '-user.invitations', )
 
     id = db.Column(db.Integer, primary_key=True)
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'), nullable=False)

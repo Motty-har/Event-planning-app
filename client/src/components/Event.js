@@ -16,7 +16,7 @@ function Event() {
   const { user } = useGlobalState();
 
   useEffect(() => {
-    setIsLoading(true); // Set loading to true before fetching data
+    setIsLoading(true);
 
     fetch(`/get_event/${event_id}`)
       .then((resp) => resp.json())
@@ -112,6 +112,10 @@ function Event() {
             <div className="single-event-card-details">
               <h1 className="single-event-card-title">{event.title}</h1>
               <hr />
+              {user.id === event.host_id ? null : 
+              (<p className="single-event-card-text"> 
+                <strong>Host:</strong> {event.host.first_name} {event.host.last_name}
+              </p>)}
               <p className="single-event-card-text">
                 <strong>Date:</strong> {event.date}
               </p>
@@ -147,7 +151,6 @@ function Event() {
       <div>
         {event && user.id === hostId && (
           <div>
-            <hr />
             {invites && invites.length > 0 ? (
               <div>
                 <h1 className="invite-header">Invites</h1>
@@ -190,7 +193,7 @@ function Event() {
           </div>
         )}
       </div>
-      <hr />
+   
       <div>
         {tasks && tasks.length > 0 ? (
           <div>
@@ -281,7 +284,7 @@ function Event() {
           </div>
         )}
       </div>
-      <hr></hr>
+      
     </div>
   );
 }

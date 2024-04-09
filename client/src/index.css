@@ -77,7 +77,7 @@ body {
   width: 300px;
   max-height: fit-content;
   overflow-y: auto;
-  background-color: #AEC6CF;
+  background-color: #FAF0E6;
   box-shadow: 0 2px 4px #483C32;
   border-radius: 8px;
   border: 3px solid #483C32;
@@ -85,9 +85,9 @@ body {
 }
 .no-notifications {
   padding: 12px;
-  background-color: #AEC6CF;
+  background-color: #FAF0E6;
   color: #483C32;
-  border-radius: 3px;
+  border-radius: 8px;
   margin-bottom: 10px;
   display: flex;
   justify-content: space-between;

@@ -17,7 +17,7 @@ import { faCommentsDollar } from "@fortawesome/free-solid-svg-icons";
 
 function App() {
   const [loading, setLoading] = useState(true);
-  const { user, setUser, events, setEvents, hostedEvents, setHostedEvents, setNotifications, notifications } = useGlobalState();
+  const { user, setUser, events, setEvents, hostedEvents, setHostedEvents, setNotifications, setNewestNotification } = useGlobalState();
  
   useEffect(() => {
     fetch('/check_session')
@@ -36,8 +36,6 @@ function App() {
         setLoading(false);
       });
   }, []);
-  
-  console.log(notifications)
   useEffect(() => {
     
     if (user && user.id) {
@@ -50,14 +48,15 @@ function App() {
       socket.on('notification', (data) => {
         console.log(data)
         setNotifications((prevNotifications) => [...prevNotifications, data]);
+        setNewestNotification(data);
       });
   
-      // Disconnect socket when component unmounts or when user data changes
+
       return () => {
         socket.disconnect();
       };
     }
-  }, [user]); // Dependency on user state
+  }, [user]); 
   
 
   if (loading) {

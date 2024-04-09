@@ -2,6 +2,7 @@ import React from "react";
 import { useGlobalState } from "./Context";
 import EventCard from "./EventCard";
 import { Link } from "react-router-dom";
+import LoadingPage from './LoadingPage'
 
 function DisplayMyEvents(){
     const { hostedEvents, user } = useGlobalState()
