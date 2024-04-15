@@ -6,7 +6,9 @@ import LoadingPage from './LoadingPage'
 
 function DisplayMyEvents(){
     const { hostedEvents, user } = useGlobalState()
-    if (!user || hostedEvents.length === 0) {
+    if(hostedEvents === undefined){
+      return <LoadingPage />;
+    } else if (!user || hostedEvents.length === 0) {
       return (
         <div className="no-events-container">
           <div className="no-events-message">No Events</div>
@@ -31,4 +33,4 @@ function DisplayMyEvents(){
     );
 }
 
-export default DisplayMyEvents
+export default DisplayMyEvents;

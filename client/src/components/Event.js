@@ -284,7 +284,6 @@ function Event() {
           </div>
         )}
       </div>
-      
     </div>
   );
 }

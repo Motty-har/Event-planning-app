@@ -110,14 +110,13 @@ class CreateInvitations(Resource):
                 status='pending'
             )
             db.session.add(invitation)
-    
+
             if str(user_id) in user_sessions:
                 sid = user_sessions[str(user_id)]
                 notification_data = {'event': event.to_dict(), 'message': 'You have a new invitation!'}
                 socketio.emit('notification', notification_data, room=sid)
         
         db.session.commit()
-        
         return {'Success': True}, 200
     
 class CreateTasks(Resource):

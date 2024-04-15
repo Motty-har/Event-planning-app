@@ -8,6 +8,7 @@ function NotificationItem ({ notification, newNotification }) {
   function onNotificationClick(){
     setNotifications(notifications.filter((event) => {
       return event.id !== notification.id}))
+      setShowNotifications(false)
     history.push(`/upcoming-event/${notification.event.id}`);
   }
   function onClose(){
