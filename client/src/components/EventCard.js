@@ -6,7 +6,6 @@ function EventCard({ event, status }) {
   const { title, description, date, time, location, host_id } = event;
   const { user } = useGlobalState();
   const history = useHistory();
-  console.log(status)
   function handleClick() {
     history.push(`/upcoming-event/${event.id}`);
   }
