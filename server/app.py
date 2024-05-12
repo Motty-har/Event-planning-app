@@ -100,22 +100,29 @@ class CreateInvitations(Resource):
         invitees = data.get('selected_users')
         event_id = data.get('event_id')
         event = Event.query.filter_by(id=event_id).first()
-        Invitation.query.filter_by(event_id = event_id).delete()
-        db.session.commit()
-
+       
         for user_id in invitees:
-            invitation = Invitation(
-                event_id=event_id,
-                user_id=user_id,
-                status='pending'
-            )
-            db.session.add(invitation)
+            existing_invitation = Invitation.query.filter_by(event_id=event_id, user_id=user_id).first()
+            if not existing_invitation:
+                
+                invitation = Invitation(
+                    event_id=event_id,
+                    user_id=user_id,
+                    status='pending'
+                )
+                db.session.add(invitation)
 
-            if str(user_id) in user_sessions:
-                sid = user_sessions[str(user_id)]
-                notification_data = {'event': event.to_dict(), 'message': 'You have a new invitation!'}
-                socketio.emit('notification', notification_data, room=sid)
-        
+                notification = Notification(
+                    event_id = event_id,
+                    invited_user_id = user_id
+                )
+                db.session.add(notification)
+
+                if str(user_id) in user_sessions:
+                    sid = user_sessions[str(user_id)]
+                    notification_data = {'event': event.to_dict(), 'message': 'You have a new invitation!'}
+                    socketio.emit('notification', notification_data, room=sid)
+                
         db.session.commit()
         return {'Success': True}, 200
     
@@ -192,6 +199,19 @@ class EventStatus(Resource):
             return invite.to_dict(), 200
         else:
             return {'error': 'Invite not found'}, 404
+        
+class DeleteNotification(Resource):
+    def delete(slef, event_id):
+        notification = Notification.query.filter_by(event_id = event_id).first()
+    
+        if notification:
+            db.session.delete(notification)
+            db.session.commit()
+            return {'message': 'Notification deleted successfully'}, 200
+        else:
+            return {'error': 'Notification not found'}, 404
+
+    
 
 api.add_resource(CheckSession, '/check_session', endpoint='check_session')
 api.add_resource(Signup, '/signup')
@@ -207,6 +227,7 @@ api.add_resource(TaskStatus, '/task_status/<int:task_id>')
 api.add_resource(DeleteTasks, '/delete_task/<int:task_id>')
 api.add_resource(AssignTask, '/assign_task/<int:task_id>/<int:user_id>')
 api.add_resource(EventStatus, '/event_status/<int:invite_id>')
+api.add_resource(DeleteNotification, '/delete_notification/<int:event_id>')
 
 user_sessions = {}
 @socketio.on('connect')

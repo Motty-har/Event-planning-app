@@ -17,7 +17,7 @@ import { faCommentsDollar } from "@fortawesome/free-solid-svg-icons";
 
 function App() {
   const [loading, setLoading] = useState(true);
-  const { user, setUser, events, setEvents, hostedEvents, setHostedEvents, setNotifications, setNewestNotification } = useGlobalState();
+  const { user, setUser, events, setEvents, hostedEvents, setHostedEvents, setNotifications, setNewestNotification, notifications } = useGlobalState();
  
   useEffect(() => {
     fetch('/check_session')
@@ -37,6 +37,7 @@ function App() {
       });
     
   }, []);
+  console.log(notifications)
   useEffect(() => {
     
     if (user && user.id) {
@@ -48,8 +49,8 @@ function App() {
   
       socket.on('notification', (data) => {
         console.log(data)
-        setNotifications((prevNotifications) => [...prevNotifications, data]);
-        setNewestNotification(data);
+        setNotifications((prevNotifications) => [...prevNotifications, data.event]);
+        setNewestNotification(data.event);
       });
   
 

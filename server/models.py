@@ -104,6 +104,7 @@ class Notification(db.Model, SerializerMixin):
     __tablename__ = 'notifications'
 
     serialize_rules = ('-user', '-event.tasks', '-event.invitations', '-event.host.invitations', '-event.host.hosted_events', '-event.host.tasks', '-event.host.notifications')
+    
     id = db.Column(db.Integer, primary_key=True)
     invited_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     event_id = db.Column(db.Integer, db.ForeignKey('events.id'))

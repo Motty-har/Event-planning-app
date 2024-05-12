@@ -7,19 +7,23 @@ function NotificationItem ({ notification, newNotification }) {
   const history = useHistory();
 
   function onNotificationClick(){
-    setNotifications(notifications.filter((event) => event.id !== notification.event.id));
+    setNotifications(notifications.filter((event) => event.id !== notification.id));
     setShowNotifications(false);
-    history.push(`/upcoming-event/${notification.event.id}`);
+    fetch(`/delete_notification/${notification.id}`, {
+      method: 'DELETE',
+    })
+    history.push(`/upcoming-event/${notification.id}`);
   }
-
   function onClose(notification){
-    console.log(notification)
     if (newNotification) {
       setNewestNotification(null);
     } else {
+      fetch(`/delete_notification/${notification.id}`, {
+        method: 'DELETE',
+      })
       setNotifications(
         notifications.filter((event) => {
-          if (event.event.id !== notification.event.id) {
+          if (event.id !== notification.id) {
             return true; 
           } else {
             return false;
@@ -28,10 +32,9 @@ function NotificationItem ({ notification, newNotification }) {
       );
     }
   }
-
   return (
     <div className={newNotification ? "new-notification-item" : "notification-item"}>
-      <p>{notification.event.host.first_name} {notification.event.host.last_name} has invited you to "{notification.event.title}"</p>
+      <p>{notification.host.first_name} {notification.host.last_name} has invited you to "{notification.title}"</p>
       <button className="view-event-button" onClick={() => onNotificationClick()}>View Event</button>
       <button className="close-button" onClick={() => onClose(notification)}>X</button>
     </div>
